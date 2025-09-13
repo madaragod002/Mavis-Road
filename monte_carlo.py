@@ -16,16 +16,18 @@ class MonteCarloSimulation:
         '1_year': 365 * 24  # 8760 horas
     }
     
-    def __init__(self, fleet, use_repair_tool=False):
+    def __init__(self, fleet, use_repair_tool=False, referral_tier=0):
         """
         Inicializar simulación con flota de camiones
         
         Args:
             fleet (list): Lista de rarezas de camiones
             use_repair_tool (bool): Si usar herramienta de reducción de averías
+            referral_tier (int): Tier de referido (0: ninguno, 1: -2%, 2: -3%, 3: -5%)
         """
         self.fleet = fleet
         self.use_repair_tool = use_repair_tool
+        self.referral_tier = referral_tier
         self.lock = threading.Lock()
         
     def simulate_single_run(self, time_period_hours):
@@ -44,7 +46,7 @@ class MonteCarloSimulation:
         
         for truck_rarity in self.fleet:
             # Crear nuevo camión para cada simulación
-            truck = TruckSimulator(truck_rarity, self.use_repair_tool)
+            truck = TruckSimulator(truck_rarity, self.use_repair_tool, self.referral_tier)
             
             # Simular el período
             period_result = truck.simulate_period(time_period_hours)
@@ -142,11 +144,11 @@ class MonteCarloSimulation:
             
             results['rarity_breakdown'][rarity] = {
                 'count': stats['count'],
-                'avg_profit': float(np.mean(profits)),
-                'total_profit': float(np.mean(profits)) * stats['count'],
+                'avg_profit': float(np.mean(profits)) / stats['count'],  # Profit per truck
+                'total_profit': float(np.mean(profits)),  # Total profit for all trucks of this rarity
                 'std_profit': float(np.std(profits)),
-                'avg_trips': float(np.mean(trips)),
-                'avg_repairs': float(np.mean(repairs)),
+                'avg_trips': float(np.mean(trips)) / stats['count'],  # Trips per truck
+                'avg_repairs': float(np.mean(repairs)) / stats['count'],  # Repairs per truck
                 'profit_per_truck': profits.tolist()
             }
         
@@ -197,8 +199,15 @@ class MonteCarloSimulation:
             fuel_costs = (trips_per_truck // config['fuel_frequency']) * config['fuel_cost']
             tire_costs = (trips_per_truck // config['tire_frequency']) * config['tire_cost']
             
-            # Calcular probabilidad de avería considerando herramienta
+            # Calcular probabilidad de avería considerando tier de referido y herramienta
             breakdown_prob = config['breakdown_probability']
+            
+            # Aplicar reducción por tier de referido
+            referral_reduction = {
+                0: 0.0, 1: 0.02, 2: 0.03, 3: 0.05
+            }.get(self.referral_tier, 0.0)
+            breakdown_prob = max(0, breakdown_prob - referral_reduction)
+            
             if self.use_repair_tool and trips_per_truck > 0:
                 # Reducir probabilidad en 5% para los primeros 2 viajes
                 trips_with_tool = min(2, trips_per_truck)
