@@ -9,7 +9,7 @@ from monte_carlo import MonteCarloSimulation
 # Page configuration
 st.set_page_config(
     page_title="Mavis Road - Monte Carlo Simulator",
-    page_icon="馃殯",
+    page_icon="🚚",
     layout="wide"
 )
 
@@ -186,69 +186,82 @@ def main():
         
         # Display truck cards with images
         st.subheader("🚚 Truck Gallery")
-        
-        # Create truck cards
-        cols = st.columns(5)
-        
-        truck_data = [
-            {
-                "name": "Comfort",
-                "rarity": 1,
-               # "image": "20250913_124714_1757782671363.jpg",
-                "ron_per_trip": 4,
-                "breakdown_chance": "30%",
-                "fuel_price": "2 $Ron",
-                "engine": "Advanced Diesel"
-            },
-            {
-                "name": "Highline", 
-                "rarity": 2,
-              #  "image": "20250913_124802_1757782671385.jpg",
-                "ron_per_trip": 5,
-                "breakdown_chance": "26%",
-                "fuel_price": "2 $Ron",
-                "engine": "Advanced Diesel"
-            },
-            {
-                "name": "Shift",
-                "rarity": 3, 
-            #    "image": "20250913_124821_1757782671402.jpg",
-                "ron_per_trip": 7,
-                "breakdown_chance": "20%",
-                "fuel_price": "2 $Ron",
-                "engine": "Advanced Diesel"
-            },
-            {
-                "name": "Electric",
-                "rarity": 4,
-             #   "image": "20250913_124838_1757782671418.jpg", 
-                "ron_per_trip": 9,
-                "breakdown_chance": "17%",
-                "fuel_price": "1 $Ron",
-                "engine": "Electric Engine"
-            },
-            {
-                "name": "Autonomous",
-                "rarity": 5,
-           #     "image": "20250913_124853_1757782671434.jpg",
-                "ron_per_trip": 11,
-                "breakdown_chance": "14%", 
-                "fuel_price": "1 $Ron",
-                "engine": "Electric Engine"
+
+        # CSS responsivo para grid en desktop y scroll en móvil
+        st.markdown("""
+        <style>
+        .truck-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            padding: 10px;
+        }
+        .truck-card {
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            background: #f8f9fa;
+            box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            overflow: hidden;
+        }
+        .truck-card img {
+            width: 100%;
+            height: auto;
+            border-bottom: 2px solid #ddd;
+        }
+        .truck-card .header {
+            padding: 10px;
+            font-weight: bold;
+            font-size: 1em;
+        }
+        .truck-card .stars {
+            margin: 5px 0;
+            color: gold;
+        }
+        .truck-card .footer {
+            padding: 10px;
+            font-size: 0.9em;
+            text-align: left;
+        }
+        /* En móviles: cambia de grid a scroll horizontal */
+        @media (max-width: 768px) {
+            .truck-gallery {
+                display: flex;
+                overflow-x: auto;
+                gap: 15px;
             }
-        ]
-        
-        for i, truck in enumerate(truck_data):
-            with cols[i]:
-                # Card header and stars
-                st.markdown(f"""
-                <div style="border: 2px solid #ddd; border-radius: 10px 10px 0 0; padding: 15px 15px 5px 15px; text-align: center; background: #f8f9fa;">
-                    <h4 style="margin: 0;">{truck['name']} (Rarity {truck['rarity']})</h4>
-                    <div style="margin: 10px 0;">
-                        {'猸�' * truck['rarity']}{'鈽�' * (5 - truck['rarity'])}
-                    </div>
+            .truck-card {
+                flex: 0 0 auto;
+                width: 160px;
+                font-size: 0.8em;
+            }
+            .truck-card .footer {
+                font-size: 0.75em;
+            }
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
+        # Renderizar tarjetas
+        st.markdown('<div class="truck-gallery">', unsafe_allow_html=True)
+
+        for truck in truck_data:
+            card_html = """
+            <div class="truck-card">
+                <div class="header">{truck['name']} (Rarity {truck['rarity']})</div>
+                <div class="stars">{'⭐' * truck['rarity']}</div>
+                <img src="{truck['image']}" alt="{truck['name']} Truck">
+                <div class="footer">
+                    <strong>RON per trip:</strong> {truck['ron_per_trip']}<br>
+                    <strong>Breakdown chance:</strong> {truck['breakdown_chance']}<br>
+                    <strong>Fuel Price:</strong> {truck['fuel_price']}<br>
+                    <strong>Engine Type:</strong> {truck['engine']}
                 </div>
-                """, unsafe_allow_html=True)
+            </div>
+            """
+            st.markdown(card_html, unsafe_allow_html=True)
+
+        st.markdown('</div>', unsafe_allow_html=True)
                 
                 # Truck image
                 try:
