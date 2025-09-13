@@ -55,13 +55,14 @@ class TruckSimulator:
         }
     }
     
-    def __init__(self, rarity, use_repair_tool=False):
+    def __init__(self, rarity, use_repair_tool=False, referral_tier=0):
         """
         Inicializar camión con rareza específica
         
         Args:
             rarity (int): Rareza del camión (1-5)
             use_repair_tool (bool): Si usar la herramienta de reducción de averías
+            referral_tier (int): Tier de referido (0: ninguno, 1: -2%, 2: -3%, 3: -5%)
         """
         if rarity not in self.TRUCK_CONFIG:
             raise ValueError(f"Rareza {rarity} no válida. Debe estar entre 1-5")
@@ -77,6 +78,15 @@ class TruckSimulator:
         self.use_repair_tool = use_repair_tool
         self.repair_tool_trips_remaining = 2 if use_repair_tool else 0
         self.repair_tool_cost = 1 if use_repair_tool else 0
+        
+        # Tier de referido
+        self.referral_tier = referral_tier
+        self.referral_reduction = {
+            0: 0.0,
+            1: 0.02,  # 2%
+            2: 0.03,  # 3%
+            3: 0.05   # 5%
+        }.get(referral_tier, 0.0)
         
         # Añadir costo de herramienta al inicio
         if use_repair_tool:
@@ -98,8 +108,13 @@ class TruckSimulator:
             'repair_cost': 0
         }
         
-        # Calcular probabilidad de avería (reducida si la herramienta está activa)
+        # Calcular probabilidad de avería (reducida por tier de referido y herramienta)
         current_breakdown_prob = self.config['breakdown_probability']
+        
+        # Aplicar reducción por tier de referido
+        current_breakdown_prob = max(0, current_breakdown_prob - self.referral_reduction)
+        
+        # Aplicar reducción por herramienta si está activa
         if self.repair_tool_trips_remaining > 0:
             current_breakdown_prob = max(0, current_breakdown_prob - 0.05)  # Reducir 5%
             self.repair_tool_trips_remaining -= 1
@@ -188,5 +203,7 @@ class TruckSimulator:
             'config': self.config,
             'use_repair_tool': self.use_repair_tool,
             'repair_tool_trips_remaining': self.repair_tool_trips_remaining,
-            'repair_tool_cost': self.repair_tool_cost
+            'repair_tool_cost': self.repair_tool_cost,
+            'referral_tier': self.referral_tier,
+            'referral_reduction': self.referral_reduction
         }
