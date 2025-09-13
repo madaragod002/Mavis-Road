@@ -31,8 +31,8 @@ def main():
     st.markdown("""
     <div style="background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 50%, #1e40af 100%); 
                 padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
-        <h1 style="color: white; font-size: 2.5em; margin: 0;">馃殯 Mavis Road - Profit Simulator</h1>
-        <h2 style="color: #fbbf24; font-size: 1.5em; margin: 10px 0;">馃拵 Support the Creator!</h2>
+        <h1 style="color: white; font-size: 2.5em; margin: 0;">🚚 Mavis Road - Profit Simulator</h1>
+        <h2 style="color: #fbbf24; font-size: 1.5em; margin: 10px 0;">💎 Support the Creator!</h2>
         <p style="color: white; font-size: 1.2em; margin: 10px 0;">Use my referral code in the game:</p>
         <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; margin: 10px auto; width: fit-content;">
             <span style="color: #fbbf24; font-size: 1.8em; font-weight: bold; font-family: monospace;">7FB951B1</span>
@@ -43,7 +43,7 @@ def main():
     # Copy referral code section
     import streamlit.components.v1 as components
     
-    st.markdown("### 馃搵 Copy Referral Code")
+    st.markdown("### 📋 Copy Referral Code")
     col1, col2 = st.columns([2, 1])
     
     with col1:
@@ -62,19 +62,19 @@ def main():
                 cursor: pointer;
                 width: 100%;
                 font-size: 14px;
-            ">馃搵 Copy Code</button>
+            ">📋 Copy Code</button>
             <div id="status" style="margin-top: 5px; font-size: 12px; text-align: center;"></div>
         </div>
         <script>
         function copyToClipboard() {
             navigator.clipboard.writeText('7FB951B1').then(function() {
-                document.getElementById('status').innerHTML = '鉁� Copied!';
+                document.getElementById('status').innerHTML = '✅ Copied!';
                 document.getElementById('status').style.color = 'green';
                 setTimeout(() => {
                     document.getElementById('status').innerHTML = '';
                 }, 2000);
             }).catch(function(err) {
-                document.getElementById('status').innerHTML = '鉂� Copy failed - use manual copy';
+                document.getElementById('status').innerHTML = '❌ Copy failed - use manual copy';
                 document.getElementById('status').style.color = 'red';
                 console.error('Could not copy text: ', err);
             });
@@ -84,15 +84,15 @@ def main():
     
     # Program description
     st.markdown("""
-    ### 馃幆 Simulator Objective
+    ### 🎯 Simulator Objective
     
     This application helps you **calculate real profits** you can earn in Mavis Road 
     based on your truck fleet. The simulator considers all important expenses:
     
-    鈥� **Trip earnings** according to each truck's rarity  
-    鈥� **Fixed costs**: fuel (every 2 trips) and tires (every 4 trips)  
-    鈥� **Repairs**: each truck has its specific breakdown probability  
-    鈥� **Referral tier**: reduces breakdowns for your entire fleet  
+    ● **Trip earnings** according to each truck's rarity  
+    ● **Fixed costs**: fuel (every 2 trips) and tires (every 4 trips)  
+    ● **Repairs**: each truck has its specific breakdown probability  
+    ● **Referral tier**: reduces breakdowns for your entire fleet  
     
     Use Monte Carlo simulation (10,000 iterations) to get **realistic results** 
     and make better decisions about your truck investments.
@@ -100,7 +100,7 @@ def main():
     
     # Sidebar for truck management
     with st.sidebar:
-        st.header("馃敡 Fleet Management")
+        st.header("🔧 Fleet Management")
         
         # Truck rarity selection
         rarity_options = {
@@ -133,7 +133,7 @@ def main():
         }
         
         st.session_state.referral_tier = st.selectbox(
-            "馃寙 Referral Tier:",
+            "💼 Referral Tier:",
             options=list(referral_options.keys()),
             format_func=lambda x: referral_options[x],
             index=st.session_state.referral_tier,
@@ -142,12 +142,12 @@ def main():
         
         # Anti-breakdown tool
         st.session_state.use_repair_tool = st.checkbox(
-            "馃敡 Use anti-breakdown tool",
+            "🔧 Use anti-breakdown tool",
             value=st.session_state.use_repair_tool,
             help="Reduces breakdown probability by 5% for the first 2 trips. Costs 1 RON per truck."
         )
         
-        if st.button("鉃� Add Trucks"):
+        if st.button("➕ Add Trucks"):
             for _ in range(quantity):
                 st.session_state.fleet.append(selected_rarity)
             st.success(f"{quantity} truck(s) of rarity {selected_rarity} added!")
@@ -155,7 +155,7 @@ def main():
         
         # Fleet summary
         if st.session_state.fleet:
-            st.subheader("馃搳 Fleet Summary")
+            st.subheader("📊 Fleet Summary")
             fleet_summary = pd.Series(st.session_state.fleet).value_counts().sort_index()
             
             for rarity, count in fleet_summary.items():
@@ -167,25 +167,25 @@ def main():
             benefits = []
             if st.session_state.referral_tier > 0:
                 tier_reductions = {1: "-2%", 2: "-3%", 3: "-5%"}
-                benefits.append(f"馃寙 Tier {st.session_state.referral_tier}: {tier_reductions[st.session_state.referral_tier]} breakdowns")
+                benefits.append(f"💼 Tier {st.session_state.referral_tier}: {tier_reductions[st.session_state.referral_tier]} breakdowns")
             
             if st.session_state.use_repair_tool:
-                benefits.append("馃敡 Tool: -5% breakdowns x 2 trips (+1 RON/truck)")
+                benefits.append("🔧 Tool: -5% breakdowns x 2 trips (+1 RON/truck)")
             
             if benefits:
-                st.success("**Active benefits:**\n\n" + "\n".join(f"鈥� {b}" for b in benefits))
+                st.success("**Active benefits:**\n\n" + "\n".join(f"💼 {b}" for b in benefits))
             
-            if st.button("馃棏锔� Clear Fleet"):
+            if st.button("🗑 Clear Fleet"):
                 st.session_state.fleet = []
                 st.session_state.simulation_results = None
                 st.rerun()
     
     # Main content area
     if not st.session_state.fleet:
-        st.info("馃憜 Add trucks to your fleet using the sidebar to start the simulation.")
+        st.info("👆 Add trucks to your fleet using the sidebar to start the simulation.")
         
         # Display truck cards with images
-        st.subheader("馃殯 Truck Gallery")
+        st.subheader("🚚 Truck Gallery")
         
         # Create truck cards
         cols = st.columns(5)
@@ -267,7 +267,7 @@ def main():
                 """, unsafe_allow_html=True)
         
         # Display truck specifications table
-        st.subheader("馃搵 Truck Specifications")
+        st.subheader("📋 Truck Specifications")
         
         specs_data = {
             'Rarity': [1, 2, 3, 4, 5],
@@ -278,9 +278,9 @@ def main():
             'Breakdown probability (%)': [30, 26, 20, 17, 14]
         }
         
-        st.info("馃挕 **Available benefits:**\n\n"
-                "鈥� **Referral tier**: Permanently reduces breakdowns for entire fleet\n"
-                "鈥� **Anti-breakdown tool**: Reduces breakdown 5% for 2 trips (costs 1 RON/truck)")
+        st.info("💡 **Available benefits:**\n\n"
+                "• **Referral tier**: Permanently reduces breakdowns for entire fleet\n"
+                "• **Anti-breakdown tool**: Reduces breakdown 5% for 2 trips (costs 1 RON/truck)")
         
         specs_df = pd.DataFrame(specs_data)
         st.dataframe(specs_df, use_container_width=True)
@@ -290,7 +290,7 @@ def main():
         col1, col2 = st.columns([1, 2])
         
         with col1:
-            st.subheader("鈿欙笍 Simulation Parameters")
+            st.subheader("⚙ Simulation Parameters")
             
             time_period = st.selectbox(
                 "Simulation period:",
@@ -305,7 +305,7 @@ def main():
             st.write("**Iterations:** 10,000")
             st.write("**Trips every:** 12 hours")
             
-            if st.button("馃幉 Run Monte Carlo Simulation", type="primary"):
+            if st.button("🎲 Run Monte Carlo Simulation", type="primary"):
                 with st.spinner("Running simulation..."):
                     # Execute main simulation
                     simulator = MonteCarloSimulation(st.session_state.fleet, st.session_state.use_repair_tool, st.session_state.referral_tier)
@@ -323,7 +323,7 @@ def main():
                 st.rerun()
         
         with col2:
-            st.subheader("馃殯 Your Current Fleet")
+            st.subheader("🚚 Your Current Fleet")
             fleet_df = pd.DataFrame({
                 'Truck': [f"Truck {i+1}" for i in range(len(st.session_state.fleet))],
                 'Rarity': st.session_state.fleet
@@ -334,11 +334,11 @@ def main():
     if st.session_state.simulation_results:
         results = st.session_state.simulation_results
         
-        st.header("馃搱 Simulation Results")
+        st.header("📈 Simulation Results")
         
         # Summary statistics
         if 'comparison_baseline' in results and (st.session_state.use_repair_tool or st.session_state.referral_tier > 0):
-            st.subheader("馃搱 Comparison: With vs Without Benefits")
+            st.subheader("🆚️ Comparison: With vs Without Benefits")
             
             comparison = results['comparison_baseline']
             
@@ -347,7 +347,7 @@ def main():
             with col1:
                 diff_profit = results['mean_profit'] - comparison['mean_profit']
                 st.metric(
-                    "馃挵 Average Profit",
+                    "💰 Average Profit",
                     f"{results['mean_profit']:.2f} RON",
                     delta=f"{diff_profit:+.2f} RON vs without benefits"
                 )
@@ -355,7 +355,7 @@ def main():
             with col2:
                 diff_max = results['max_profit'] - comparison['max_profit']
                 st.metric(
-                    "馃搱 Maximum Profit",
+                    "📈 Maximum Profit",
                     f"{results['max_profit']:.2f} RON",
                     delta=f"{diff_max:+.2f} RON"
                 )
@@ -363,7 +363,7 @@ def main():
             with col3:
                 diff_min = results['min_profit'] - comparison['min_profit']
                 st.metric(
-                    "馃搲 Minimum Profit",
+                    "📉 Minimum Profit",
                     f"{results['min_profit']:.2f} RON",
                     delta=f"{diff_min:+.2f} RON"
                 )
@@ -371,7 +371,7 @@ def main():
             with col4:
                 diff_prob = results['positive_probability'] - comparison['positive_probability']
                 st.metric(
-                    "馃幆 Positive Profit Probability",
+                    "🎯 Positive Profit Probability",
                     f"{results['positive_probability']:.1f}%",
                     delta=f"{diff_prob:+.1f}%"
                 )
@@ -381,33 +381,33 @@ def main():
             
             with col1:
                 st.metric(
-                    "馃挵 Average Profit",
+                    " Average Profit",
                     f"{results['mean_profit']:.2f} RON",
                     delta=f"卤{results['std_profit']:.2f}"
                 )
             
             with col2:
                 st.metric(
-                    "馃搱 Maximum Profit",
+                    "📈 Maximum Profit",
                     f"{results['max_profit']:.2f} RON"
                 )
             
             with col3:
                 st.metric(
-                    "馃搲 Minimum Profit",
+                    "📉 Minimum Profit",
                     f"{results['min_profit']:.2f} RON"
                 )
             
             with col4:
                 st.metric(
-                    "馃幆 Positive Profit Probability",
+                    "🎲 Positive Profit Probability",
                     f"{results['positive_probability']:.1f}%"
                 )
         
         # Charts
         if 'comparison_baseline' in results and (st.session_state.use_repair_tool or st.session_state.referral_tier > 0):
             # Comparative charts
-            st.subheader("馃搱 Comparative Charts")
+            st.subheader(" Comparative Charts")
             
             col1, col2 = st.columns(2)
             
@@ -501,7 +501,7 @@ def main():
         
         # Detailed breakdown by truck rarity
         if 'rarity_breakdown' in results:
-            st.subheader("馃搳 Analysis by Truck Rarity")
+            st.subheader("📊 Analysis by Truck Rarity")
             
             breakdown_data = []
             for rarity, data in results['rarity_breakdown'].items():
@@ -529,7 +529,7 @@ def main():
             
             # Show benefits effectiveness if comparison exists
             if 'comparison_baseline' in results and (st.session_state.use_repair_tool or st.session_state.referral_tier > 0):
-                st.subheader("馃搱 Benefits Effectiveness")
+                st.subheader(" Benefits Effectiveness")
                 
                 comparison = results['comparison_baseline']
                 tool_cost = len(st.session_state.fleet) * 1 if st.session_state.use_repair_tool else 0  # 1 RON por cami贸n
@@ -563,7 +563,7 @@ def main():
                 st.dataframe(effectiveness_df, use_container_width=True)
         
         # Download results
-        st.subheader("馃捑 Download Results")
+        st.subheader("💾 Download Results")
         
         # Prepare data for download
         if 'comparison_baseline' in results and (st.session_state.use_repair_tool or st.session_state.referral_tier > 0):
@@ -616,7 +616,7 @@ def main():
         
         csv = results_summary.to_csv(index=False)
         st.download_button(
-            label="馃摜 Download Summary CSV",
+            label="📥 Download Summary CSV",
             data=csv,
             file_name="mavis_road_simulation_results.csv",
             mime="text/csv"
