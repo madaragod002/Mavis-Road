@@ -180,7 +180,7 @@ def main():
         
         st.subheader("🚚 Truck Gallery")
 
-        
+        # 1. Definir el CSS para las tarjetas y el contenedor con scroll
         css_style = """
         <style>
             .scroll-container {
@@ -222,48 +222,34 @@ def main():
         st.markdown(css_style, unsafe_allow_html=True)
 
         truck_data = [
-            {
-                "name": "Comfort", "rarity": 1, "image": "Comfort.jpg", "ron_per_trip": 4, "breakdown_chance": "30%", "fuel_price": "2 $Ron", "engine": "Advanced Diesel"
-            },
-            {
-                "name": "Highline", "rarity": 2, "image": "Highline.jpg", "ron_per_trip": 5, "breakdown_chance": "26%", "fuel_price": "2 $Ron", "engine": "Advanced Diesel"
-            },
-            {
-                "name": "Shift", "rarity": 3, "image": "Shift.jpg", "ron_per_trip": 7, "breakdown_chance": "20%", "fuel_price": "2 $Ron", "engine": "Advanced Diesel"
-            },
-            {
-                "name": "Electric", "rarity": 4, "image": "Electric.jpg", "ron_per_trip": 9, "breakdown_chance": "17%", "fuel_price": "1 $Ron", "engine": "Electric Engine"
-            },
-            {
-                "name": "Autonomous", "rarity": 5, "image": "Autonomous.jpg", "ron_per_trip": 11, "breakdown_chance": "14%", "fuel_price": "1 $Ron", "engine": "Electric Engine"
-            }
+            {"name": "Comfort", "rarity": 1, "image": "20250913_124714_1757782671363.jpg", "ron_per_trip": 4, "breakdown_chance": "30%", "fuel_price": "2 $Ron", "engine": "Advanced Diesel"},
+            {"name": "Highline", "rarity": 2, "image": "20250913_124802_1757782671385.jpg", "ron_per_trip": 5, "breakdown_chance": "26%", "fuel_price": "2 $Ron", "engine": "Advanced Diesel"},
+            {"name": "Shift", "rarity": 3, "image": "20250913_124821_1757782671402.jpg", "ron_per_trip": 7, "breakdown_chance": "20%", "fuel_price": "2 $Ron", "engine": "Advanced Diesel"},
+            {"name": "Electric", "rarity": 4, "image": "20250913_124838_1757782671418.jpg", "ron_per_trip": 9, "breakdown_chance": "17%", "fuel_price": "1 $Ron", "engine": "Electric Engine"},
+            {"name": "Autonomous", "rarity": 5, "image": "20250913_124853_1757782671434.jpg", "ron_per_trip": 11, "breakdown_chance": "14%", "fuel_price": "1 $Ron", "engine": "Electric Engine"}
         ]
 
-        # 2. Construir el HTML de las tarjetas (CÓDIGO REESCRITO PARA LIMPIAR CARACTERES)
-        # Esta es la parte más importante de la corrección.
+        # 2. Construir el HTML de las tarjetas usando concatenación de strings para evitar errores
         html_cards = '<div class="scroll-container">'
         for truck in truck_data:
             stars = '⭐' * truck['rarity'] + '⚫' * (5 - truck['rarity'])
             
-            # Plantilla HTML limpia, sin espacios extraños
-            card_template = """
-            <div class="card">
-              <div class="card-header">
-                <h4>{name} (Rarity {rarity})</h4>
-                <div>{stars}</div>
-              </div>
-              <img src="{image}" alt="{name} Truck">
-              <div class="card-body">
-                <strong>RON per trip:</strong> {ron_per_trip}<br>
-                <strong>Breakdown chance:</strong> {breakdown_chance}<br>
-                <strong>Fuel Price:</strong> {fuel_price}<br>
-                <strong>Engine Type:</strong> {engine}
-              </div>
-            </div>
-            """
-            
-            # Aplicamos el formato usando un f-string, que es más legible y seguro aquí
-            html_cards += card_template.format(
+            # Usamos el método .format() que es más seguro para este caso
+            card_html = (
+                '<div class="card">'
+                '  <div class="card-header">'
+                '    <h4>{name} (Rarity {rarity})</h4>'
+                '    <div>{stars}</div>'
+                '  </div>'
+                '  <img src="{image}" alt="{name} Truck">'
+                '  <div class="card-body">'
+                '    <strong>RON per trip:</strong> {ron_per_trip}<br>'
+                '    <strong>Breakdown chance:</strong> {breakdown_chance}<br>'
+                '    <strong>Fuel Price:</strong> {fuel_price}<br>'
+                '    <strong>Engine Type:</strong> {engine}'
+                '  </div>'
+                '</div>'
+            ).format(
                 name=truck['name'],
                 rarity=truck['rarity'],
                 stars=stars,
@@ -273,6 +259,7 @@ def main():
                 fuel_price=truck['fuel_price'],
                 engine=truck['engine']
             )
+            html_cards += card_html
         
         html_cards += '</div>'
 
