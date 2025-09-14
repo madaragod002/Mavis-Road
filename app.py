@@ -238,7 +238,6 @@ def main():
                         st.session_state.simulation_results['comparison_baseline'] = results_baseline
 
                 st.success("Simulation completed!")
-                st.rerun()
 
         with col2:
             st.subheader("🚚 Your Current Fleet")
